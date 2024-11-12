@@ -1,0 +1,420 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: Gestion Mairie/ Gestion des roles d'users
+servers:
+  - url: http://localhost:8087
+    description: Application de gestion des roles d'users
+paths:
+  /users/register:
+    put:
+      summary: Creer un nouveau compte
+      tags:
+        - SignUp-controller
+      description: Ajouter un nouveau utilisateur
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /signUps/addUser:
+    put:
+      summary: Ajouter un nouveau utilisateur
+      tags:
+        - SignUp-controller
+      description: Ajouter un nouveau utilisateur via un token de connexion
+      operationId: addUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /users/login:
+    put:
+      summary: Se connecter
+      tags:
+        - SignUp-controller
+      description: recuperer son token d'authentification
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Log"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogResponse"
+  /users/read/actif:
+    get:
+      summary: Afficher tous les users actifs
+      tags:
+        - User-controller
+      description: Afficher tous les users ayant leur droit de surf sur la plateforme
+      operationId: actifUser
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /users/update/{id}:
+    patch:
+      summary: Modifier les informations d'un User donnée
+      tags:
+        - User-controller
+      description: Modifier les informations d'un User donnée
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /users/search/{id}:
+    get:
+      summary: Rechercher un User donnée via son id
+      tags:
+        - User-controller
+      description: Rechercher un User donnée via son identifiant
+      operationId: searchUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/User"
+  /users/delete/{id}:
+    delete:
+      summary: Suprimer définitivement un User donnée(faire table rase)
+      tags:
+        - User-controller
+      description: Suprimer un User donnée via son identifiant
+      operationId: removeUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /users/read/inactif:
+    get:
+      summary: Afficher tous les users inactifs
+      tags:
+        - User-controller
+      description: Afficher tous les users n'ayant pas leur droit de surf sur la plateforme
+      operationId: lowUser
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /users/read:
+    get:
+      summary: Afficher tous les users
+      tags:
+        - User-controller
+      description: Afficher tous les users de la base de donnée
+      operationId: listUser
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+  /users/bloquer/{id}:
+    patch:
+      summary: bloquer temporairement un User donnée
+      tags:
+        - User-controller
+      description: bloquer un User donnée via son identifiant
+      operationId: bloquerUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /users/debloquer/{id}:
+    patch:
+      summary: debloquer un User donnée
+      tags:
+        - User-controller
+      description: debloquer un User donnée via son identifiant
+      operationId: debloquerUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+
+  /roles/create:
+    post:
+      summary: Ajouter un nouveau role
+      tags:
+        - Role-controller
+      description: Ajouter un nouveau role dans la base de donnée
+
+      operationId: saveRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Role"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /roles/update/{id}:
+    patch:
+      summary: Modifier les informations d'un Role donnée
+      tags:
+        - Role-controller
+      description: Modifier les informations d'un Role donnée via son identifiant
+      operationId: updateRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Role"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /roles/search/{id}:
+    get:
+      summary: Rechercher un Role donnée
+      tags:
+        - Role-controller
+      description: Rechercher un Role donnée via son identifiant
+      operationId: searchRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/Role"
+
+  /roles/read:
+    get:
+      summary: Afficher tous les les roles
+      tags:
+        - Role-controller
+      description: Afficher tous les les roles enregistrés dans la base de donnée
+      operationId: listRole
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Role"
+  /roles/delete/{id}:
+    delete:
+      summary: Suprimer un Role donnée
+      tags:
+        - Role-controller
+      description: Suprimer un Role donnée via son identifiant
+      operationId: removeRole
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        idUser:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        prenom:
+          type: string
+        sexe:
+          type: string
+        lieuNaissance:
+          type: string
+        dateNaissance:
+          type: string
+        DateCreation:
+          type: string
+        DateModification:
+          type: string
+        etatCompte:
+          type: string
+        adresse:
+          type: string
+        typePiece:
+          type: string
+        numeroPiece:
+          type: string
+        profession:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+        telephone:
+          type: string
+        roleName:
+          type: string
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Role"
+        token:
+          type: string
+
+    Role:
+      type: object
+      properties:
+        idRole:
+          type: integer
+          format: int64
+        name:
+          type: string
+
+    Log:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+
+    LogResponse:
+      type: object
+      properties:
+        idUser:
+          type: integer
+          format: int64
+        nom:
+          type: string
+        prenom:
+          type: string
+        login:
+          type: string
+        etatCompte:
+          type: boolean
+        roles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Role"
+        token:
+          type: string
